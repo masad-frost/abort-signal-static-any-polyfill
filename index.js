@@ -1,7 +1,7 @@
-AbortSignal.any || (AbortSignal.any = function any() {
+AbortSignal.any || (AbortSignal.any = function any(signals) {
   const controller = new AbortController();
 
-  const cleanups: Array<() => void> = [];
+  const cleanups = [];
   for (const signal of signals) {
     const abort = () => {
       controller.abort(signal.reason);
@@ -13,7 +13,7 @@ AbortSignal.any || (AbortSignal.any = function any() {
       break;
     }
 
-    signal.addEventListener('abort', listener);
+    signal.addEventListener('abort', abort);
     cleanups.push(() => signal.removeEventListener('abort', abort));
   }
 
